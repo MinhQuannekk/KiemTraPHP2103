@@ -13,26 +13,23 @@ class SinhVien
         $this->conn = $database->connect();
     }
 
-    // public function getAll()
-    // {
-    //     $query = "SELECT * FROM " . $this->table;
-    //     $stmt = $this->conn->prepare($query);
-    //     $stmt->execute();
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
     public function getAll()
     {
         $query = "SELECT * FROM " . $this->table;
         $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo "<pre>";
-        print_r($result);
-        echo "</pre>";
+        if (!$stmt->execute()) {
+            die("Lỗi SQL: " . implode(" - ", $stmt->errorInfo())); // Debug lỗi SQL
+        }
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($result)) {
+            echo "Không có dữ liệu!";
+        }
 
         return $result;
     }
+
 
 
     public function getById($maSV)
@@ -47,16 +44,22 @@ class SinhVien
     public function create($maSV, $hoTen, $gioiTinh, $ngaySinh, $hinh, $maNganh)
     {
         $query = "INSERT INTO " . $this->table . " (MaSV, HoTen, GioiTinh, NgaySinh, Hinh, MaNganh) 
-                  VALUES (:maSV, :hoTen, :gioiTinh, :ngaySinh, :hinh, :maNganh)";
+              VALUES (:maSV, :hoTen, :gioiTinh, :ngaySinh, :hinh, :maNganh)";
         $stmt = $this->conn->prepare($query);
+
         $stmt->bindParam(":maSV", $maSV);
         $stmt->bindParam(":hoTen", $hoTen);
         $stmt->bindParam(":gioiTinh", $gioiTinh);
         $stmt->bindParam(":ngaySinh", $ngaySinh);
         $stmt->bindParam(":hinh", $hinh);
         $stmt->bindParam(":maNganh", $maNganh);
-        return $stmt->execute();
+
+        if (!$stmt->execute()) {
+            die("Lỗi SQL: " . implode(" - ", $stmt->errorInfo()));
+        }
+        return true;
     }
+
 
     public function update($maSV, $hoTen, $gioiTinh, $ngaySinh, $hinh, $maNganh)
     {

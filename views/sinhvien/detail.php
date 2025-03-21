@@ -1,4 +1,4 @@
-// views/sinhvien/detail.php
+
 <?php include '../partials/header.php'; ?>
 <h2>Chi tiết Sinh Viên</h2>
 <p>Mã SV: <?= $sinhVien['MaSV'] ?></p>

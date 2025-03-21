@@ -1,3 +1,11 @@
+<?php
+if (!isset($students)) {
+    require_once __DIR__ . '/../../controllers/SinhVienController.php';
+    $controller = new SinhVienController();
+    $controller->index();
+    exit(); // Dừng script sau khi gọi controller để tránh chạy phần code cũ bị lỗi.
+}
+?>
 <?php include '../partials/header.php'; ?>
 
 <h2>Danh sách Sinh Viên</h2>
@@ -23,9 +31,10 @@
                 <td><img src="../uploads/<?= htmlspecialchars($student['Hinh']) ?>" width="50"></td>
                 <td><?= htmlspecialchars($student['MaNganh']) ?></td>
                 <td>
-                    <a href="detail.php?maSV=<?= $student['MaSV'] ?>">Chi tiết</a> |
-                    <a href="edit.php?maSV=<?= $student['MaSV'] ?>">Sửa</a> |
-                    <a href="delete.php?maSV=<?= $student['MaSV'] ?>">Xóa</a>
+                    <a href="../../controllers/SinhVienController.php?action=detail&maSV=<?= $student['MaSV'] ?>">Chi tiết</a> |
+                    <a href="../../controllers/SinhVienController.php?action=edit&maSV=<?= $student['MaSV'] ?>">Sửa</a> |
+                    <a href="../../controllers/SinhVienController.php?action=delete&maSV=<?= $student['MaSV'] ?>">Xóa</a>
+
                 </td>
             </tr>
         <?php endforeach; ?>

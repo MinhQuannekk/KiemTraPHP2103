@@ -1,7 +1,7 @@
 <?php
 class Database
 {
-    private $host = "localhost";
+    private $host = "localhost:3306";
     private $db_name = "Test1";
     private $username = "root";
     private $password = "";
@@ -19,6 +19,8 @@ class Database
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->exec("set names utf8");
+
+            echo "Kết nối thành công!";
         } catch (PDOException $exception) {
             die("Kết nối thất bại: " . $exception->getMessage());
         }

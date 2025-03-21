@@ -1,7 +1,6 @@
-// views/sinhvien/create.php
 <?php include '../partials/header.php'; ?>
 <h2>Thêm Sinh Viên</h2>
-<form method="POST" action="create.php">
+<form method="POST" action="../../views/create.php" enctype="multipart/form-data">
     <input type="text" name="maSV" placeholder="Mã SV" required>
     <input type="text" name="hoTen" placeholder="Họ Tên" required>
     <select name="gioiTinh">

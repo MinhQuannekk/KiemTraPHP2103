@@ -13,20 +13,58 @@ class SinhVienController
 
     public function index()
     {
-        $students = $this->model->getAll(); // Lấy danh sách sinh viên từ model
-        include __DIR__ . '/../views/sinhvien/index.php'; // Đảm bảo đường dẫn đúng
+        $students = $this->model->getAll();
+        include __DIR__ . '/../views/sinhvien/index.php';
     }
+
+
 
 
     public function create()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->model->create($_POST['maSV'], $_POST['hoTen'], $_POST['gioiTinh'], $_POST['ngaySinh'], $_POST['hinh'], $_POST['maNganh']);
-            header("Location: index.php");
-            exit();
+            $maSV = $_POST['maSV'] ?? null;
+            $hoTen = $_POST['hoTen'] ?? null;
+            $gioiTinh = $_POST['gioiTinh'] ?? null;
+            $ngaySinh = $_POST['ngaySinh'] ?? null;
+            $maNganh = $_POST['maNganh'] ?? null;
+
+            // Kiểm tra lỗi upload file
+            $hinh = null;
+            if (!empty($_FILES['hinh']['name'])) {
+                $uploadDir = __DIR__ . '/../uploads/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                $fileName = time() . "_" . basename($_FILES['hinh']['name']);
+                $targetPath = $uploadDir . $fileName;
+
+                if (move_uploaded_file($_FILES['hinh']['tmp_name'], $targetPath)) {
+                    $hinh = $fileName;
+                } else {
+                    die("Lỗi khi tải ảnh lên.");
+                }
+            }
+
+            // Kiểm tra dữ liệu trước khi insert
+            if (!$maSV || !$hoTen || !$gioiTinh || !$ngaySinh || !$maNganh) {
+                die("Vui lòng nhập đầy đủ thông tin.");
+            }
+
+            // Gọi model để lưu vào DB
+            if ($this->model->create($maSV, $hoTen, $gioiTinh, $ngaySinh, $hinh, $maNganh)) {
+                header("Location: index.php");
+                exit();
+            } else {
+                die("Lỗi khi thêm dữ liệu vào DB.");
+            }
         }
-        include "views/sinhvien/create.php";
+
+        include __DIR__ . '/../views/sinhvien/create.php';
     }
+
+
 
     public function edit($maSV)
     {
